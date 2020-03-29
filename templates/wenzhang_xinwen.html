@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html class=" js csstransforms3d"><head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>文章发布</title>
+	<link rel="stylesheet" href="{% static 'css/base.css' %}">
+	<link rel="stylesheet" href="{% static 'css/page.css' %}">
+	<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/modernizr.js' %}"></script>
+</head>
+
+<body style="background: #f6f5fa;">
+	<!--content S-->
+	<div class="super-content RightMain" id="RightMain">
+		<!--header-->
+		<div class="superCtab">
+			<div class="ctab-title clearfix">
+                <h3>文章发布</h3>
+            </div>
+			<div class="ctab-Main">
+				<div class="ctab-Main-title">
+					<ul class="clearfix">
+                        {% if cid == 0 %}
+                            <li class="cur"><a>所有文章</a></li>
+                        {% else %}
+                            <li><a href="{% url 'App:main' %}">所有文章</a></li>
+                        {% endif %}
+                        {% for category in categories %}
+                            {% if category.cid == cid %}
+						        <li class="cur"><a>{{ category.cname }}</a></li>
+                            {% else %}
+                                <li><a href="{% url 'App:main' cid=category.cid page=1 %}">{{ category.cname }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+					</ul>
+				</div>
+				<div class="ctab-Mian-cont">
+					<div class="Mian-cont-btn clearfix">
+						<div class="operateBtn">
+							<a href="{% url 'App:publish' %}" class="greenbtn publish">发布文章</a>
+							<a href="javascript:;" class="greenbtn add sp-add">添加分类</a>
+
+						</div>
+						<div class="searchBar">
+                            <form action="{% url 'App:main' %}" method="post">
+                                {% csrf_token %}
+							    <input type="text" id="" value="" name="name" class="form-control srhTxt" placeholder="输入标题关键字搜索">
+							    <input type="submit" class="srhBtn" value="">
+                            </form>
+						</div>
+					</div>
+					<div class="Mian-cont-wrap">
+						<div class="defaultTab-T">
+							<table border="0" cellspacing="0" cellpadding="0" class="defaultTable">
+								<tbody><tr><th class="t_1">文章ID</th><th class="t_2">文章标题</th><th class="t_3">发布时间</th><th class="t_4">操作</th></tr>
+							</tbody></table>
+						</div>
+						<table border="0" cellspacing="0" cellpadding="0" class="defaultTable defaultTable2">
+							<tbody>
+                            {% for article in pages.object_list %}
+                            <tr>
+								<td class="t_1">{{ article.aid }}</td>
+								<td class="t_2"><a href="{% url 'App:article_content' aid=article.aid %}">{{ article.aname }}</a></td>
+								<td class="t_3">{{ article.create_time }}</td>
+								<td class="t_4">
+                                    <div class="btn">
+{#                                        <a class="Top">置顶</a>#}
+                                        <a href="{% url 'App:alter' aid=article.aid %}" class="modify">修改</a>
+                                        <a href="{% url 'App:delete' aid=article.aid %}" class="delete">删除</a>
+                                    </div>
+                                </td>
+							</tr>
+                            {% endfor %}
+						</tbody></table>
+						<!--pages S-->
+						<div class="pageSelect">
+							<span>共 <b>{{ paginator.count }}</b> 条 每页 <b>10 </b>条   {{ pages.number }}/{{ paginator.num_pages }}</span>
+							<div class="pageWrap">
+                            {% if pages.number == 1 %}
+								<a class="pagePre"><i class="ico-pre">&nbsp;</i></a>
+                            {% else %}
+                                <a class="pagePre" href="{% url 'App:main' cid=cid page=pages.previous_page_number %}"><i class="ico-pre">&nbsp;</i></a>
+                            {% endif %}
+                                {% for p in paginator.page_range %}
+                                    {% if p == page %}
+                                        <a class="pagenumb cur">{{ p }}</a>
+                                    {% else %}
+                                        <a href="{% url 'App:main' cid=0 page=p %}" class="pagenumb">{{ p }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% if pages.number == paginator.num_pages %}
+								<a class="pagenext"><i class="ico-next">&nbsp;</i></a>
+                            {% else %}
+                            	<a href="{% url 'App:main' cid=cid page=pages.next_page_number %}" class="pagenext"><i class="ico-next">&nbsp;</i></a>
+                            {% endif %}
+							</div>
+						</div>
+						<!--pages E-->
+					</div>
+				
+				</div>
+			</div>
+		</div>
+		<!--main-->
+		
+	</div>
+	<!--content E-->
+	
+	<div class="layuiBg"></div><!--公共遮罩-->
+	<!--点击添加分类弹出-->
+	<div class="addFeileibox layuiBox">
+		<div class="layer-title clearfix"><h2>添加分类</h2><span class="layerClose"></span></div>
+		<div class="layer-content">
+{#			<div class="aFllink clearfix"><span>上级栏目：</span><h5>新闻动态</h5></div>#}
+            <form action="{% url 'App:add_category' %}" method="post">
+                {% csrf_token %}
+                <div class="aFllink clearfix">
+                    <span>分类名称：</span>
+                    <input type="text" name="category" value="">
+                </div>
+                <div class="aFlBtn"><input type="submit" value="保存" class="saveBtn"></div>
+            </form>
+		</div>
+	</div>
+
+</body></html>

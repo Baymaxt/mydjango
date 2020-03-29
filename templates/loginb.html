@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>用户登录</title>
+	<link rel="stylesheet" href="{% static 'css/base.css' %}" />
+	<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+</head>
+<body>
+<div class="superlogin"></div>
+<div class="loginBox">
+	<div class="loginMain">
+		<div class="tabwrap">
+            <form action="" method="post">
+                {% csrf_token %}
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class="title">用户名：</td>
+                        <td><input type="text" class="form-control txt" name="username"/></td>
+                    </tr>
+                    <tr>
+                        <td class="title">密&nbsp;码：</td>
+                        <td><input type="password" class="form-control txt" name="password"/></td>
+                    </tr>
+                    <tr>
+                        <td class="title">验证码：</td>
+                        <td>
+                            {{ form.captcha }}
+                        </td>
+                    </tr>
+                    <tr class="errortd">
+                        {% if correct == 0 %}
+                        <td>&nbsp;</td>
+                        <td>
+                            <i class="ico-error"></i>
+                            <span class="errorword">用户名或密码错误，请重新输入！</span>
+                        </td>
+                        {% elif correct == 2 %}
+                            <td>&nbsp;</td>
+                        <td>
+                            <i class="ico-error"></i>
+                            <span class="errorword">验证码错误，请重新输入！</span>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>
+                            <input style="width: 102px; height: 42px; color: #fff; font-size: 16px; border-radius: 2px;" type="submit" class="loginbtn" value="登录" onclick="location.href='{% url 'App:login' %}'"/>
+                            <input type="button" class="resetbtn" value="重置" onclick="location.href='{% url 'App:logout' %}'"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class="forgetpsw"></td>
+                    </tr>
+                </table>
+            </form>
+		</div>
+	</div>
+</div>
+<div class="footer">Copyright © 2016-2017 jianet  All Rights Reserved.</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"> </script>
+<script>
+    //点击刷新验证码
+    $(function () {
+        $('.captcha').css({
+            'cursor': 'pointer'
+        });
+    // ajax刷新
+    $('.captcha').click(function () {
+        console.log('click');
+        $.get("{% url 'captcha-refresh' %}",
+            function (result) {
+            $('.captcha').attr('src', result['image_url']);
+            $('#id_captcha_0').val(result['key'])
+        });
+    });
+	})
+</script>
+
+
+</html>

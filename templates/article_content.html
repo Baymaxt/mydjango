@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html class=" js csstransforms3d"><head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>咨询管理－团队</title>
+	<link rel="stylesheet" href="{% static 'css/base.css' %}">
+	<link rel="stylesheet" href="{% static 'css/page.css' %}">
+	<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/modernizr.js' %}"></script>
+</head>
+
+<body style="background: #f6f5fa;">
+
+	<!--content S-->
+	<div class="super-content">
+		<div class="superCtab">
+			<div class="ctab-title clearfix"><h3>{{ article.aname }}</h3></div>
+			
+			<div class="ctab-Main">
+				
+				<div class="ctab-Mian-cont">
+					<div class="Mian-cont-btn Mian-cont-btn2 clearfix">
+						<div class="operateBtn">
+                            <a href="{% url 'App:alter' aid=article.aid %}" class="modify sp-modify" id="sp-modify">修改</a>
+						</div>
+					</div>
+					<div class="Mian-cont-wrap" id="notetext" style="padding: 10px; ">
+						{{ article.content }}
+						<!--pages E-->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--main-->
+		
+	</div>
+	<!--content E-->
+</body>
+
+<script type="text/javascript">
+    var obj = document.getElementById("notetext");
+    obj.innerHTML = obj.innerText;//这样重新设置html代码为解析后的格式
+</script>
+</html>
